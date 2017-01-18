@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import DZNEmptyDataSet
 
 class GroupsViewController: UIViewController {
 
@@ -36,6 +37,11 @@ class GroupsViewController: UIViewController {
     
     do {
       groups = try managedContext.fetch(Group.fetchRequest())
+      if groups.count == 0 {
+        self.groupsTableView.emptyDataSetSource = self
+        self.groupsTableView.emptyDataSetDelegate = self
+        self.groupsTableView.reloadData()
+      }
     } catch {
       print("Fetching Tasks Failed..")
     }
@@ -101,3 +107,15 @@ extension GroupsViewController: UITableViewDelegate, UITableViewDataSource {
   }
   
 }
+
+extension GroupsViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
+  func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+    let initialString = "No Groups"
+    let str = NSMutableAttributedString.init(string: initialString)
+    return str
+  }
+}
+
+
+
+

@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import DZNEmptyDataSet
 
 class TasksViewController: UIViewController {
     
@@ -39,6 +40,11 @@ class TasksViewController: UIViewController {
         let request: NSFetchRequest<Task> = Task.fetchRequest()
         request.predicate = NSPredicate(format: "group.name = %@", (self.group?.name)!)
         tasks = try managedContext.fetch(request)
+        if tasks.count == 0 {
+          self.tasksTableView.emptyDataSetSource = self
+          self.tasksTableView.emptyDataSetDelegate = self
+          self.tasksTableView.reloadData()
+        }
       } catch {
         print("Fetching Tasks Failed..")
       }
@@ -82,3 +88,19 @@ extension TasksViewController: UITableViewDelegate, UITableViewDataSource {
   }
     
 }
+
+extension TasksViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
+  func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+    let initialString = "No Tasks"
+    let str = NSMutableAttributedString.init(string: initialString)
+    return str
+  }
+}
+
+
+
+
+
+
+
+

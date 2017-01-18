@@ -1,0 +1,15 @@
+PODS:
+  - DZNEmptyDataSet (1.8.1)
+  - LNRSimpleNotifications (0.5.3)
+
+DEPENDENCIES:
+  - DZNEmptyDataSet
+  - LNRSimpleNotifications
+
+SPEC CHECKSUMS:
+  DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
+  LNRSimpleNotifications: 13aa05e2f65ccf196f736def89178007f30a5182
+
+PODFILE CHECKSUM: 521bce8522d009f0bb017d34366b6cca9a3d9ab9
+
+COCOAPODS: 1.1.1
