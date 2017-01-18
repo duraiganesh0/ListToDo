@@ -41,10 +41,15 @@ class AddTaskViewController: UIViewController {
         print("Could not save. \(error), \(error.userInfo)")
     }
   }
+  
   @IBAction func addButtonAction(_ sender: AnyObject) {
     if taskNameTextField.text != "" {
       saveTask(name: taskNameTextField.text!)
     }
+  }
+  
+  @IBAction func backButtonClicked(_ sender: AnyObject) {
+    self.navigationController?.popViewController(animated: true)
   }
 
 }

@@ -36,7 +36,9 @@ class TasksViewController: UIViewController {
       let managedContext = appDelegate.persistentContainer.viewContext
       
       do {
-        tasks = try managedContext.fetch(Task.fetchRequest())
+        let request: NSFetchRequest<Task> = Task.fetchRequest()
+        request.predicate = NSPredicate(format: "group.name = %@", (self.group?.name)!)
+        tasks = try managedContext.fetch(request)
       } catch {
         print("Fetching Tasks Failed..")
       }
@@ -45,8 +47,14 @@ class TasksViewController: UIViewController {
   
   @IBAction func addButtonActiion(_ sender: AnyObject) {
     let addTaskVC = self.storyboard?.instantiateViewController(withIdentifier: "AddTaskViewController") as! AddTaskViewController
+    addTaskVC.group = self.group
     self.navigationController?.pushViewController(addTaskVC, animated: true)
   }
+  
+  @IBAction func backButtonClicked(_ sender: AnyObject) {
+    self.navigationController?.popViewController(animated: true)
+  }
+  
   
 }
 

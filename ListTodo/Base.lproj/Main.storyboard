@@ -34,10 +34,23 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sjH-5Z-dwQ">
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="32" id="8Mq-ST-dGu"/>
+                                            <constraint firstAttribute="height" constant="32" id="EVk-mO-M3J"/>
+                                        </constraints>
+                                        <inset key="contentEdgeInsets" minX="4" minY="4" maxX="4" maxY="4"/>
+                                        <state key="normal" image="Less Than Filled-32 white"/>
+                                        <connections>
+                                            <action selector="backButtonClicked:" destination="Nef-E2-fu2" eventType="touchUpInside" id="juk-a1-eqS"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="0.72549115060000002" blue="0.50991166070000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
+                                    <constraint firstItem="sjH-5Z-dwQ" firstAttribute="leading" secondItem="XZ0-iX-Rh1" secondAttribute="leadingMargin" id="6iS-hC-0UM"/>
                                     <constraint firstItem="r9h-nj-UQB" firstAttribute="centerY" secondItem="XZ0-iX-Rh1" secondAttribute="centerY" id="71j-53-avh"/>
+                                    <constraint firstItem="sjH-5Z-dwQ" firstAttribute="centerY" secondItem="XZ0-iX-Rh1" secondAttribute="centerY" id="bKq-So-Jik"/>
                                     <constraint firstAttribute="height" constant="60" id="mqp-WB-3qz"/>
                                     <constraint firstItem="r9h-nj-UQB" firstAttribute="centerX" secondItem="XZ0-iX-Rh1" secondAttribute="centerX" id="yvF-vF-8R6"/>
                                 </constraints>
@@ -154,11 +167,24 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ws8-Fi-Gv4">
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="32" id="5QY-Iy-KuA"/>
+                                            <constraint firstAttribute="height" constant="32" id="SFy-da-SrU"/>
+                                        </constraints>
+                                        <inset key="contentEdgeInsets" minX="4" minY="4" maxX="4" maxY="4"/>
+                                        <state key="normal" image="Less Than Filled-32 white"/>
+                                        <connections>
+                                            <action selector="backButtonClicked:" destination="Ytf-kW-50Z" eventType="touchUpInside" id="gZT-hq-0ez"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="0.72549115060000002" blue="0.50991166070000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="tZu-cE-x79" firstAttribute="centerY" secondItem="MBu-KU-2CC" secondAttribute="centerY" id="CxZ-jk-KXL"/>
                                     <constraint firstAttribute="height" constant="60" id="DfT-0y-KLW"/>
+                                    <constraint firstItem="Ws8-Fi-Gv4" firstAttribute="leading" secondItem="MBu-KU-2CC" secondAttribute="leadingMargin" id="Sgm-kf-sG4"/>
+                                    <constraint firstItem="Ws8-Fi-Gv4" firstAttribute="centerY" secondItem="MBu-KU-2CC" secondAttribute="centerY" id="VJp-RC-l0m"/>
                                     <constraint firstItem="tZu-cE-x79" firstAttribute="centerX" secondItem="MBu-KU-2CC" secondAttribute="centerX" id="Vzm-ph-0xV"/>
                                 </constraints>
                             </view>
@@ -276,7 +302,7 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="46"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4MB-vQ-1rj" id="be7-SI-jaZ">
-                                            <frame key="frameInset" width="375" height="45"/>
+                                            <frame key="frameInset" width="375" height="46"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -338,6 +364,7 @@
     </scenes>
     <resources>
         <image name="Accept Icon" width="128" height="128"/>
+        <image name="Less Than Filled-32 white" width="32" height="32"/>
         <image name="reject_icon" width="128" height="128"/>
     </resources>
 </document>

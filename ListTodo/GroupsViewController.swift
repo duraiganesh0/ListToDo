@@ -59,6 +59,7 @@ class GroupsViewController: UIViewController {
       }
       self.initialize()
     }))
+    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
     self.present(alert, animated: true, completion: nil)
     
   }
@@ -79,7 +80,10 @@ extension GroupsViewController: UITableViewDelegate, UITableViewDataSource {
   }
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    
+    let group = groups[indexPath.row]
+    let taskVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "TasksViewController") as! TasksViewController
+    taskVC.group = group
+    self.navigationController?.pushViewController(taskVC, animated: true)
   }
   
 }
