@@ -86,4 +86,18 @@ extension GroupsViewController: UITableViewDelegate, UITableViewDataSource {
     self.navigationController?.pushViewController(taskVC, animated: true)
   }
   
+  func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    let group = groups[indexPath.row]
+    if editingStyle == .delete {
+      context.delete(group)
+      
+      do {
+        try context.save()
+        self.viewWillAppear(true)
+      } catch let error as NSError {
+        print("Could not save. \(error), \(error.userInfo)")
+      }
+    }
+  }
+  
 }
