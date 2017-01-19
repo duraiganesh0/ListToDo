@@ -29,6 +29,12 @@ class GroupsViewController: UIViewController {
     initialize()
   }
   
+//////////////////////////////////////////////////////////////////////////////////////////
+//
+// User Defined Functions
+//
+//////////////////////////////////////////////////////////////////////////////////////////
+  
   func initialize() {
     guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
       return
@@ -47,6 +53,12 @@ class GroupsViewController: UIViewController {
     }
     self.groupsTableView.reloadData()
   }
+  
+//////////////////////////////////////////////////////////////////////////////////////////
+//
+// Button Actions
+//
+//////////////////////////////////////////////////////////////////////////////////////////
   
   @IBAction func addButtonActiion(_ sender: AnyObject) {
     
@@ -72,6 +84,12 @@ class GroupsViewController: UIViewController {
   
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+//
+// Table View Delegates and Data Source
+//
+//////////////////////////////////////////////////////////////////////////////////////////
+
 extension GroupsViewController: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -80,6 +98,7 @@ extension GroupsViewController: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
+    cell?.selectionStyle = .none
     let group = groups[indexPath.row]
     cell?.textLabel?.text = group.name
     return cell!
@@ -107,6 +126,12 @@ extension GroupsViewController: UITableViewDelegate, UITableViewDataSource {
   }
   
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////
+//
+// Table View Empty Data Source
+//
+//////////////////////////////////////////////////////////////////////////////////////////
 
 extension GroupsViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
   func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {

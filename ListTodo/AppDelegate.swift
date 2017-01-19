@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,6 +18,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
     // Override point for customization after application launch.
+    
+    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) {(accepted, error) in
+      if !accepted {
+        print("Notification access denied.")
+      }
+    }
+//    let action = UNNotificationAction(identifier: "markCompleted", title: "Mark as Completed", options: [.foreground])
+//    let category = UNNotificationCategory(identifier: "todoList", actions: [action], intentIdentifiers: [], options: [])
+//    UNUserNotificationCenter.current().setNotificationCategories([category])
     return true
   }
 
@@ -43,6 +53,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Saves changes in the application's managed object context before the application terminates.
     self.saveContext()
   }
+  
+  
+  // MARK: - user defined functions
+  
+  func notifyWithinApp(_ message: String) {
+    Utils.sharedInstance.notifyLocally(message)
+  }
+  
+  func scheduleNotification(at date: Date, body: String, userInfo: [AnyHashable: Any]) {
+    let calendar = Calendar(identifier: .gregorian)
+    let components = calendar.dateComponents(in: .current, from: date)
+    let newComponents = DateComponents(calendar: calendar, timeZone: .current, month: components.month, day: components.day, hour: components.hour, minute: components.minute)
+    
+    let trigger = UNCalendarNotificationTrigger(dateMatching: newComponents, repeats: false)
+    
+    let content = UNMutableNotificationContent()
+    content.title = "Dont Forget"
+    content.body = body
+    content.sound = UNNotificationSound.default()
+    //content.categoryIdentifier = "todoList"
+    
+    let request = UNNotificationRequest(identifier: "textNotification", content: content, trigger: trigger)
+    
+    UNUserNotificationCenter.current().delegate = self
+    //UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+    UNUserNotificationCenter.current().add(request) {(error) in
+      if let error = error {
+        print("Uh oh! We had an error: \(error)")
+      }
+    }
+  }
+  
 
   // MARK: - Core Data stack
 
@@ -89,5 +131,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       }
   }
 
+}
+
+@available(iOS 10, *)
+extension AppDelegate : UNUserNotificationCenterDelegate {
+  
+  // Receive displayed notifications for iOS 10 devices.
+  func userNotificationCenter(_ center: UNUserNotificationCenter,
+                              willPresent notification: UNNotification,
+                              withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    // Print message ID.
+    // Print full message.
+  }
+  
+  func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+    let userInfo = response.notification.request.content.userInfo as! [String: AnyObject]
+    if response.actionIdentifier == "markCompleted" {
+      let taskName = userInfo["taskName"] as! String
+      let taskDate = userInfo["taskGroupName"] as! Date
+    }
+  }
 }
 

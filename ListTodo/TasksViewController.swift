@@ -12,44 +12,62 @@ import DZNEmptyDataSet
 
 class TasksViewController: UIViewController {
     
-    @IBOutlet weak var tasksTableView: UITableView!
-    
-    var tasks = [Task]()
-    
-    var group: Group?
+  @IBOutlet weak var tasksTableView: UITableView!
+  
+  var tasks = [Task]()
+  
+  var group: Group?
+  
+  lazy var formatter: DateFormatter = {
+    var tmpFormatter = DateFormatter()
+    tmpFormatter.dateFormat = "dd-MM-YYYY hh:mm a"
+    return tmpFormatter
+  }()
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        tasksTableView.delegate = self
-        tasksTableView.dataSource = self
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        initialize()
-    }
+  override func viewDidLoad() {
+      super.viewDidLoad()
+      // Do any additional setup after loading the view, typically from a nib.
+      tasksTableView.delegate = self
+      tasksTableView.dataSource = self
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+      super.viewWillAppear(true)
+      initialize()
+  }
+  
+//////////////////////////////////////////////////////////////////////////////////////////
+//
+// User Defined Functions
+//
+//////////////////////////////////////////////////////////////////////////////////////////
 
-    func initialize() {
-      guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-          return
-      }
-      let managedContext = appDelegate.persistentContainer.viewContext
-      
-      do {
-        let request: NSFetchRequest<Task> = Task.fetchRequest()
-        request.predicate = NSPredicate(format: "group.name = %@", (self.group?.name)!)
-        tasks = try managedContext.fetch(request)
-        if tasks.count == 0 {
-          self.tasksTableView.emptyDataSetSource = self
-          self.tasksTableView.emptyDataSetDelegate = self
-          self.tasksTableView.reloadData()
-        }
-      } catch {
-        print("Fetching Tasks Failed..")
-      }
-      self.tasksTableView.reloadData()
+  func initialize() {
+    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+        return
     }
+    let managedContext = appDelegate.persistentContainer.viewContext
+    
+    do {
+      let request: NSFetchRequest<Task> = Task.fetchRequest()
+      request.predicate = NSPredicate(format: "group.name = %@", (self.group?.name)!)
+      tasks = try managedContext.fetch(request)
+      if tasks.count == 0 {
+        self.tasksTableView.emptyDataSetSource = self
+        self.tasksTableView.emptyDataSetDelegate = self
+        self.tasksTableView.reloadData()
+      }
+    } catch {
+      print("Fetching Tasks Failed..")
+    }
+    self.tasksTableView.reloadData()
+  }
+
+//////////////////////////////////////////////////////////////////////////////////////////
+//
+// Button Actions
+//
+//////////////////////////////////////////////////////////////////////////////////////////
   
   @IBAction func addButtonActiion(_ sender: AnyObject) {
     let addTaskVC = self.storyboard?.instantiateViewController(withIdentifier: "AddTaskViewController") as! AddTaskViewController
@@ -64,6 +82,12 @@ class TasksViewController: UIViewController {
   
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+//
+// Table View Delegates and Data Source
+//
+//////////////////////////////////////////////////////////////////////////////////////////
+
 extension TasksViewController: UITableViewDelegate, UITableViewDataSource {
     
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -75,6 +99,9 @@ extension TasksViewController: UITableViewDelegate, UITableViewDataSource {
     let task = tasks[indexPath.row]
     cell.task = task
     cell.taskNameLabel.text = task.name
+    if let date = task.dueDate {
+      cell.dueDateLabel.text = formatter.string(from: date as Date)
+    }
     if task.isComplete == true {
       cell.completeTaskButton.setImage(UIImage(named: "AcceptIconinSelectoin"), for: .normal)
     } else {
@@ -88,6 +115,12 @@ extension TasksViewController: UITableViewDelegate, UITableViewDataSource {
   }
     
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////
+//
+// Table View Empty Data Source
+//
+//////////////////////////////////////////////////////////////////////////////////////////
 
 extension TasksViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
   func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {

@@ -13,6 +13,8 @@ class TaskTableViewCell: UITableViewCell {
     
   @IBOutlet weak var taskNameLabel: UILabel!
   
+  @IBOutlet weak var dueDateLabel: UILabel!
+  
   @IBOutlet weak var completeTaskButton: UIButton!
   
   @IBOutlet weak var deleteTaskButton: UIButton!
@@ -41,6 +43,7 @@ class TaskTableViewCell: UITableViewCell {
     
     do {
       try context.save()
+      self.viewController().view.makeToast("Task Completed", duration: 2.0, position: .center)
       self.viewController().viewWillAppear(true)
     } catch let error as NSError {
       print("Could not save. \(error), \(error.userInfo)")
@@ -52,6 +55,7 @@ class TaskTableViewCell: UITableViewCell {
     
     do {
       try context.save()
+      self.viewController().view.makeToast("Task Deleted", duration: 2.0, position: .center)
       self.viewController().viewWillAppear(true)
     } catch let error as NSError {
       print("Could not save. \(error), \(error.userInfo)")
