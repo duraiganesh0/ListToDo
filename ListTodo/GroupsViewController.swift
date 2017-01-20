@@ -97,11 +97,12 @@ extension GroupsViewController: UITableViewDelegate, UITableViewDataSource {
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
-    cell?.selectionStyle = .none
+    let cell = tableView.dequeueReusableCell(withIdentifier: "groupCell") as! HomeTableViewCell
+    cell.selectionStyle = .none
+    cell.cardView.setcardView()
     let group = groups[indexPath.row]
-    cell?.textLabel?.text = group.name
-    return cell!
+    cell.groupName.text = group.name
+    return cell
   }
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

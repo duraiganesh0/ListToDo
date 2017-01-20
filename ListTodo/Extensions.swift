@@ -34,3 +34,28 @@ extension UITableViewCell {
   
   
 }
+
+
+extension UIView {
+  func roundCorners1(corners:UIRectCorner) {
+    let radius = 2
+    let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+    let mask = CAShapeLayer()
+    mask.path = path.cgPath
+    self.layer.mask = mask
+  }
+  func setcardView()
+  {
+    let cornerRadius: CGFloat = 4
+    let shadowOffsetWidth: Int = 0
+    let shadowOffsetHeight: Int = 0
+    let shadowColor: UIColor? = UIColor.gray
+    let shadowOpacity: Float = 0.5
+    layer.cornerRadius = cornerRadius
+    layer.masksToBounds = false
+    layer.shadowColor = shadowColor?.cgColor
+    layer.shadowOffset = CGSize(width: shadowOffsetWidth, height: shadowOffsetHeight);
+    layer.shadowOpacity = shadowOpacity
+  }
+  
+}

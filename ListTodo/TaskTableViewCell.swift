@@ -19,6 +19,15 @@ class TaskTableViewCell: UITableViewCell {
   
   @IBOutlet weak var deleteTaskButton: UIButton!
   
+  @IBOutlet weak var dayLabel: UILabel!
+  
+  @IBOutlet weak var monthLabel: UILabel!
+  
+  @IBOutlet weak var timeLabel: UILabel!
+  
+  @IBOutlet weak var cardView: UIView!
+  
+  
   var task: Task?
   
   let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext

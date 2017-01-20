@@ -20,7 +20,7 @@ class TasksViewController: UIViewController {
   
   lazy var formatter: DateFormatter = {
     var tmpFormatter = DateFormatter()
-    tmpFormatter.dateFormat = "dd-MM-YYYY hh:mm a"
+    tmpFormatter.dateFormat = "dd-MM-YYYY"
     return tmpFormatter
   }()
 
@@ -51,6 +51,8 @@ class TasksViewController: UIViewController {
     do {
       let request: NSFetchRequest<Task> = Task.fetchRequest()
       request.predicate = NSPredicate(format: "group.name = %@", (self.group?.name)!)
+      let sectionSortDescriptor = NSSortDescriptor(key: "dueDate", ascending: true)
+      request.sortDescriptors = [sectionSortDescriptor]
       tasks = try managedContext.fetch(request)
       if tasks.count == 0 {
         self.tasksTableView.emptyDataSetSource = self
@@ -95,12 +97,18 @@ extension TasksViewController: UITableViewDelegate, UITableViewDataSource {
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: "taskCell")! as! TaskTableViewCell
+    let cell = tableView.dequeueReusableCell(withIdentifier: "todoCell")! as! TaskTableViewCell
+    cell.selectionStyle = .none
     let task = tasks[indexPath.row]
     cell.task = task
     cell.taskNameLabel.text = task.name
+    cell.cardView.setcardView()
+    let calendar = Calendar.current
     if let date = task.dueDate {
       cell.dueDateLabel.text = formatter.string(from: date as Date)
+      cell.dayLabel.text = String(calendar.component(.day, from: date as Date))
+      cell.monthLabel.text = Utils.getMonthOfDate(dateFromDB: date as Date)
+      cell.timeLabel.text = Utils.getTimeOfDate(dateFromDB: date as Date)
     }
     if task.isComplete == true {
       cell.completeTaskButton.setImage(UIImage(named: "AcceptIconinSelectoin"), for: .normal)
