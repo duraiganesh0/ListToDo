@@ -73,6 +73,7 @@ class TasksViewController: UIViewController {
   
   @IBAction func addButtonActiion(_ sender: AnyObject) {
     let addTaskVC = self.storyboard?.instantiateViewController(withIdentifier: "AddTaskViewController") as! AddTaskViewController
+    addTaskVC.isForAdding = true
     addTaskVC.group = self.group
     self.navigationController?.pushViewController(addTaskVC, animated: true)
   }
@@ -119,7 +120,11 @@ extension TasksViewController: UITableViewDelegate, UITableViewDataSource {
   }
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-      
+    let task = tasks[indexPath.row]
+    let addTaskVC = self.storyboard?.instantiateViewController(withIdentifier: "AddTaskViewController") as! AddTaskViewController
+    addTaskVC.isForAdding = false
+    addTaskVC.taskFromTasksVC = task
+    self.navigationController?.pushViewController(addTaskVC, animated: true)
   }
     
 }

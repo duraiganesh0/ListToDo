@@ -15,10 +15,11 @@ class AddTaskViewController: UIViewController {
   @IBOutlet weak var dueDateTextField: UITextField!
   @IBOutlet weak var contentTextView: UITextView!
   @IBOutlet weak var remindMeSwitch: UISwitch!
-  
+  @IBOutlet weak var titleLabel: UILabel!
+  @IBOutlet weak var saveButton: UIButton!
   
   var group: Group?
-  
+  var taskFromTasksVC: Task?
   
   var datePicker: SMDatePicker = SMDatePicker()
   
@@ -39,6 +40,7 @@ class AddTaskViewController: UIViewController {
   var selectedDate: Date?
   
   var isForDate = false
+  var isForAdding = false
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -68,6 +70,18 @@ class AddTaskViewController: UIViewController {
     dueDateTextField.addGestureRecognizer(gesture)
     datePicker.delegate = self
     datePicker.pickerMode = .dateAndTime
+    if !isForAdding {
+      self.titleLabel.text = taskFromTasksVC?.name
+      self.saveButton.setTitle("Save", for: .normal)
+      taskNameTextField.text = taskFromTasksVC?.name
+      dueDateTextField.text = formatter.string(from: (taskFromTasksVC?.dueDate)! as Date)
+      contentTextView.text = taskFromTasksVC?.content
+      if (taskFromTasksVC?.remindMe)! == true {
+        remindMeSwitch.setOn(true, animated: false)
+      } else {
+        remindMeSwitch.setOn(false, animated: false)
+      }
+    }
   }
 
   func saveTask(name: String) {
@@ -75,19 +89,30 @@ class AddTaskViewController: UIViewController {
         return
     }
     let managedContext = appDelegate.persistentContainer.viewContext
-    let task = Task(context: managedContext)
-    task.name = taskNameTextField.text!
-    task.isComplete = false
-    task.dueDate = selectedDate as NSDate?
-    task.content = contentTextView.text
-    task.remindMe = getRemindMe()
-    task.group = self.group
+    let task: Task?
+    if isForAdding {
+      task = Task(context: managedContext)
+      task?.name = taskNameTextField.text!
+      task?.isComplete = false
+      task?.dueDate = selectedDate as NSDate?
+      task?.content = contentTextView.text
+      task?.remindMe = getRemindMe()
+      task?.group = self.group
+    } else {
+      task = taskFromTasksVC
+      task?.setValue(taskNameTextField.text!, forKey: "name")
+      if selectedDate != nil {
+        task?.setValue(selectedDate as NSDate?, forKey: "dueDate")
+      }
+      task?.setValue(contentTextView.text!, forKey: "content")
+      task?.setValue(getRemindMe(), forKey: "remindMe")
+    }
     do {
       try managedContext.save()
       //fireNotification(selectedDate!, body: "Time to \(task.name) 🏃🏾")
-      if getRemindMe() == true {
-        let userData = ["taskName" : task.name as AnyObject, "taskGroupName": (task.group?.name)! as AnyObject] as [String : AnyObject]
-        delegate?.scheduleNotification(at: self.getFinalDate(date: selectedDate!), body: "Time to \(task.name!) 🏃🏾", userInfo: userData as [String : AnyObject])
+      if getRemindMe() == true && selectedDate != nil {
+        let userData = ["taskName" : task?.name as AnyObject, "taskGroupName": (task?.group?.name)! as AnyObject] as [String : AnyObject]
+        delegate?.scheduleNotification(at: self.getFinalDate(date: selectedDate!), body: "Time to \(task?.name!) 🏃🏾", userInfo: userData as [String : AnyObject])
       }
       self.navigationController?.popViewController(animated: true)
     } catch let error as NSError {
