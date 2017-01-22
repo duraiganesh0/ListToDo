@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import UserNotifications
 
 class AddTaskViewController: UIViewController {
     
@@ -112,7 +113,7 @@ class AddTaskViewController: UIViewController {
       //fireNotification(selectedDate!, body: "Time to \(task.name) 🏃🏾")
       if getRemindMe() == true && selectedDate != nil {
         let userData = ["taskName" : task?.name as AnyObject, "taskGroupName": (task?.group?.name)! as AnyObject] as [String : AnyObject]
-        delegate?.scheduleNotification(at: self.getFinalDate(date: selectedDate!), body: "Time to \(task?.name!) 🏃🏾", userInfo: userData as [String : AnyObject])
+        delegate?.scheduleNotification(at: self.getFinalDate(date: selectedDate!), body: "Time to \((task?.name)! ) 🏃🏾", userInfo: userData as [String : AnyObject])
       }
       self.navigationController?.popViewController(animated: true)
     } catch let error as NSError {
@@ -140,6 +141,7 @@ class AddTaskViewController: UIViewController {
       return false
     }
   }
+  
   
 //////////////////////////////////////////////////////////////////////////////////////////
 //

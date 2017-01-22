@@ -39,16 +39,16 @@ class Utils {
   
   func setNotificationSettings() {
     notificationManager.notificationsPosition = LNRNotificationPosition.top
-    notificationManager.notificationsBackgroundColor = Utils.hexStringToUIColor(hex: "#5C0000")
+    notificationManager.notificationsBackgroundColor = Utils.hexStringToUIColor(hex: "#3045D4")
     notificationManager.notificationsTitleTextColor = UIColor.white
     notificationManager.notificationsBodyTextColor = UIColor.white
     notificationManager.notificationsSeperatorColor = UIColor.gray
     //notificationManager.notificationsIcon = UIImage(named: "myna-notify")
   }
   
-  func notifyLocally(_ message: String) {
+  func notifyLocally(_ message: String, title: String) {
     setNotificationSettings()
-    notificationManager.showNotification(title: "Skylark", body: message, onTap: { () -> Void in
+    notificationManager.showNotification(title: title, body: message, onTap: { () -> Void in
       
       self.notificationManager.dismissActiveNotification(completion: { () -> Void in
         print("Notification dismissed")

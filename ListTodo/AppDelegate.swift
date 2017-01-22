@@ -57,9 +57,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   
   // MARK: - user defined functions
   
-  func notifyWithinApp(_ message: String) {
-    Utils.sharedInstance.notifyLocally(message)
-  }
   
   func scheduleNotification(at date: Date, body: String, userInfo: [AnyHashable: Any]) {
     let calendar = Calendar(identifier: .gregorian)
@@ -140,16 +137,14 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
   func userNotificationCenter(_ center: UNUserNotificationCenter,
                               willPresent notification: UNNotification,
                               withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    let title = notification.request.content.title
+    let body = notification.request.content.body
+    Utils.sharedInstance.notifyLocally(body, title: title)
     // Print message ID.
     // Print full message.
   }
   
   func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-    let userInfo = response.notification.request.content.userInfo as! [String: AnyObject]
-    if response.actionIdentifier == "markCompleted" {
-      let taskName = userInfo["taskName"] as! String
-      let taskDate = userInfo["taskGroupName"] as! Date
-    }
   }
 }
 
