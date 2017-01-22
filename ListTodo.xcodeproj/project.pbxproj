@@ -712,7 +712,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BA23402F1ED51D634C2C0CD1 /* Pods-ListTodo.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-1";
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = VS4N353AJM;
 				INFOPLIST_FILE = ListTodo/Info.plist;
@@ -729,7 +729,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3B3E38DF61411F965247B256 /* Pods-ListTodo.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-1";
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = VS4N353AJM;
 				INFOPLIST_FILE = ListTodo/Info.plist;

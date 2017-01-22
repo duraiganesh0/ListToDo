@@ -13,6 +13,8 @@ class Utils {
   
   static let sharedInstance = Utils()
   
+  var selectedImageName = ""
+  
   let notificationManager = LNRNotificationManager()
   
   class func hexStringToUIColor (hex:String) -> UIColor {
@@ -99,6 +101,22 @@ class Utils {
       return tmpFormatter
     }()
     return formatter.string(from: dateFromDB)
+  }
+  
+  class func downloadImageWithURL(_ url: URL, completionBlock: @escaping (_ succeeded: Bool, _ image: UIImage?) -> Void) {
+    
+    let sessionTask = URLSession.shared
+    let request = URLRequest(url: url)
+    sessionTask.dataTask(with: request, completionHandler: {(data: Data?, response: URLResponse?, error: Error?) -> Void in
+      if (error == nil) {
+        let image: UIImage = UIImage(data: data!)!
+        completionBlock(true, image)
+      }
+      else {
+        completionBlock(false, nil)
+      }
+    }).resume()
+    
   }
   
 }

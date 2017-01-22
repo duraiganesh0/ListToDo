@@ -9,6 +9,8 @@
 import UIKit
 import CoreData
 import UserNotifications
+import AssetsLibrary
+import Photos
 
 class AddTaskViewController: UIViewController {
     
@@ -18,6 +20,8 @@ class AddTaskViewController: UIViewController {
   @IBOutlet weak var remindMeSwitch: UISwitch!
   @IBOutlet weak var titleLabel: UILabel!
   @IBOutlet weak var saveButton: UIButton!
+  @IBOutlet weak var imageButton: UIButton!
+  @IBOutlet weak var taskImageView: UIImageView!
   
   var group: Group?
   var taskFromTasksVC: Task?
@@ -41,8 +45,13 @@ class AddTaskViewController: UIViewController {
   var selectedDate: Date?
   
   var isForDate = false
+  
   var isForAdding = false
-
+  
+  let imagePicker = UIImagePickerController()
+  
+  var selectedImageData: Data?
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     self.setNeedsStatusBarAppearanceUpdate()
@@ -82,6 +91,9 @@ class AddTaskViewController: UIViewController {
       } else {
         remindMeSwitch.setOn(false, animated: false)
       }
+      if let imGUrl = taskFromTasksVC?.imageData as Data? {
+        self.taskImageView.image = UIImage(data: imGUrl as Data)
+      }
     }
   }
 
@@ -99,6 +111,9 @@ class AddTaskViewController: UIViewController {
       task?.content = contentTextView.text
       task?.remindMe = getRemindMe()
       task?.group = self.group
+      if selectedImageData != nil {
+        task?.imageData = selectedImageData as NSData?
+      }
     } else {
       task = taskFromTasksVC
       task?.setValue(taskNameTextField.text!, forKey: "name")
@@ -107,10 +122,12 @@ class AddTaskViewController: UIViewController {
       }
       task?.setValue(contentTextView.text!, forKey: "content")
       task?.setValue(getRemindMe(), forKey: "remindMe")
+      if selectedImageData != nil {
+        task?.setValue(selectedImageData, forKey: "imageData")
+      }
     }
     do {
       try managedContext.save()
-      //fireNotification(selectedDate!, body: "Time to \(task.name) 🏃🏾")
       if getRemindMe() == true && selectedDate != nil {
         let userData = ["taskName" : task?.name as AnyObject, "taskGroupName": (task?.group?.name)! as AnyObject] as [String : AnyObject]
         delegate?.scheduleNotification(at: self.getFinalDate(date: selectedDate!), body: "Time to \((task?.name)! ) 🏃🏾", userInfo: userData as [String : AnyObject])
@@ -139,6 +156,32 @@ class AddTaskViewController: UIViewController {
       return true
     } else {
       return false
+    }
+  }
+  
+  func openCamera()
+  {
+    if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerControllerSourceType.camera))
+    {
+      imagePicker.allowsEditing = true
+      imagePicker.sourceType = UIImagePickerControllerSourceType.camera
+      self .present(imagePicker, animated: true, completion: nil)
+    }
+    else
+    {
+      let ac = UIAlertController(title: "Camera!", message: "Camera not available", preferredStyle: .alert)
+      ac.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+      present(ac, animated: true, completion: nil)
+    }
+  }
+  
+  func openGallary()
+  {
+    imagePicker.allowsEditing = true
+    imagePicker.sourceType = UIImagePickerControllerSourceType.savedPhotosAlbum
+    if UIDevice.current.userInterfaceIdiom == .phone
+    {
+      self.present(imagePicker, animated: true, completion: nil)
     }
   }
   
@@ -173,6 +216,36 @@ class AddTaskViewController: UIViewController {
   }
   
   @IBAction func remindMeAction(_ sender: AnyObject) {
+  }
+  
+  @IBAction func cameraButtonAction(_ sender: AnyObject) {
+    let alert:UIAlertController=UIAlertController(title: "Choose Image", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
+    let cameraAction = UIAlertAction(title: "Camera", style: UIAlertActionStyle.default)
+    {
+      UIAlertAction in
+      self.openCamera()
+      
+    }
+    let gallaryAction = UIAlertAction(title: "Gallary", style: UIAlertActionStyle.default)
+    {
+      UIAlertAction in
+      self.openGallary()
+    }
+    let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
+    {
+      UIAlertAction in
+    }
+    // Add the actions
+    imagePicker.delegate = self
+    imagePicker.allowsEditing = true
+    alert.addAction(cameraAction)
+    alert.addAction(gallaryAction)
+    alert.addAction(cancelAction)
+    // Present the controller
+    if UIDevice.current.userInterfaceIdiom == .phone
+    {
+      self.present(alert, animated: true, completion: nil)
+    }
   }
   
 
@@ -217,6 +290,41 @@ extension AddTaskViewController: SMDatePickerDelegate {
     print(date)
     print(getFinalDate(date: date))
     
+  }
+  
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+//
+// Image Picker Delegates
+//
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+extension AddTaskViewController : UIImagePickerControllerDelegate, UINavigationControllerDelegate
+{
+  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    if imagePicker.sourceType == UIImagePickerControllerSourceType.camera
+    {
+      let image = info[UIImagePickerControllerOriginalImage] as! UIImage
+      DispatchQueue.main.async(execute: {
+        self.taskImageView.image = image
+      })
+      selectedImageData = UIImagePNGRepresentation(image)
+    } else {
+      if let referenceUrl = info[UIImagePickerControllerReferenceURL] as? URL{
+        let image = info[UIImagePickerControllerEditedImage] as? UIImage
+        DispatchQueue.main.async(execute: {
+          self.taskImageView.image = image
+        })
+        selectedImageData = UIImagePNGRepresentation(image!)
+      }
+    }
+    dismiss(animated: true, completion: nil)
+  }
+  
+  func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+    dismiss(animated: true, completion: nil)
   }
   
 }
